@@ -17,3 +17,21 @@ price = soup.find('bg-quote', {'format': '0,0.00', 'field': 'Last'})
 percent = soup.find('bg-quote', {'format': '0,0.00%', 'session': 'after'})
 print(price)
 print(percent)
+
+class MainWindow(QMainWindow):
+    def __init__(self):
+        super(MainWindow, self).__init__()
+        self.title = "Stock prices"
+        self.setWindowTitle(self.title)
+
+        main_layout = QVBoxLayout()
+
+        current_price = QLabel(price)
+        current_price.setFont(QFont('Arial', 40))
+        current_price.setAlignment(QtCore.Qt.AlignmentFlag.AlignCenter)
+        main_layout.addWidget(current_price)
+
+        
+
+
+
