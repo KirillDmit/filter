@@ -41,3 +41,12 @@ class MainWindow(QMainWindow):
             reaction.setPixmap(stonks)
 
         main_layout.addWidget(reaction)
+        widget = QWidget()
+        widget.setLayout(main_layout)
+        self.setCentralWidget(widget)
+
+
+app = QApplication(sys.argv)
+w = MainWindow()
+w.show()
+app.exec()
