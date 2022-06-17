@@ -18,6 +18,7 @@ percent = soup.find('bg-quote', {'format': '0,0.00%', 'session': 'after'})
 print(price)
 print(percent)
 
+
 class MainWindow(QMainWindow):
     def __init__(self):
         super(MainWindow, self).__init__()
@@ -31,6 +32,9 @@ class MainWindow(QMainWindow):
         current_price.setAlignment(QtCore.Qt.AlignmentFlag.AlignCenter)
         main_layout.addWidget(current_price)
 
+        reaction = QLabel(self)
+        stonks = QPixmap('stonks.png')
+        not_stonks = QPixmap('not_stonks.png')
         
 
 
