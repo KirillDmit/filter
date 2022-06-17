@@ -10,7 +10,7 @@ from bs4 import BeautifulSoup
 URL = "https://www.marketwatch.com/investing/stock/gme"
 web = requests.get(URL)
 soup = BeautifulSoup(web.content, 'html.parser')
-#print(soup.prettify())
+# print(soup.prettify())
 print(soup.findAll('h1'))
 print(soup.find('h1', {'class': 'company__name'}))
 price = soup.find('bg-quote', {'format': '0,0.00', 'field': 'Last'})
@@ -35,7 +35,9 @@ class MainWindow(QMainWindow):
         reaction = QLabel(self)
         stonks = QPixmap('stonks.png')
         not_stonks = QPixmap('not_stonks.png')
-        
+        if percent[0] == "-":
+            reaction.setPixmap(not_stonks)
+        else:
+            reaction.setPixmap(stonks)
 
-
-
+        main_layout.addWidget(reaction)
