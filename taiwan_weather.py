@@ -7,4 +7,7 @@ cities["Taipei"] = "https://weather.com/en-GB/weather/today/l/fe7393b7f2c8eed2cf
 city = input()
 url = cities[city]
 page_request = requests.get(url)
+soup = BeautifulSoup(page_request.content, 'html.parser')
+print(soup.find('span', {'data-tested': 'TemperatureValue'}).text)
+
 
