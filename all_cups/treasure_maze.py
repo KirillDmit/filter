@@ -7,7 +7,8 @@ class Ceil(Enum):
 
 
 class Action:
-    pass
+    def __init__(self):
+        self.type = type
 
 
 class Position:
@@ -22,6 +23,12 @@ class Seeker:
         self.has_coin = has_coin
 
 
+class Coin:
+    def __init__(self, position: Position, value: int):
+        self.position = position
+        self.value = value
+
+
 class ActionType(Enum):
     MOVE = 0
     TAKE_COIN = 1
@@ -30,8 +37,25 @@ class ActionType(Enum):
 
 def get_action(maze, coins, seeker: Seeker, opponent_seeker: Seeker):
     action = Action()
-    action.position = Position(seeker.position.x + 1, seeker.position.y)
     action.type = ActionType.MOVE
+    target_coin = coins[0]
+    shift_x = target_coin.position.x - seeker.position.x
+    shift_y = target_coin.position.y - seeker.position.y
+    if shift_x != 0:
+        if shift_x > 0:
+            action.position = Position(seeker.position.x + 1, seeker.position.y)
+        else:
+            action.position = Position(seeker.position.x - 1, seeker.position.y)
+    if shift_x == 0 and shift_y != 0:
+        if shift_y > 0:
+            action.position = Position(seeker.position.x, seeker.position.y + 1)
+        else:
+            action.position = Position(seeker.position.x, seeker.position.y - 1)
+    if shift_x == 0 and shift_y == 0:
+        action.position = Position(seeker.position.x, seeker.position.y)
+
+    if maze[action.position.x][action.position.y] == Ceil.WALL:
+        action.type = ActionType.CRASH_WALL
     return action
 
 
