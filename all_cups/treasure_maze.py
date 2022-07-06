@@ -6,6 +6,12 @@ class Ceil(Enum):
     WALL = 1
 
 
+class ActionType(Enum):
+    MOVE = 0
+    TAKE_COIN = 1
+    CRASH_WALL = 2
+
+
 class Action:
     def __init__(self):
         self.type = type
@@ -16,6 +22,9 @@ class Position:
         self.x = x
         self.y = y
 
+    def __eq__(self, other):
+        return self.x == other.x and self.y == other.y
+
 
 class Seeker:
     def __init__(self, position: Position, has_coin: bool):
@@ -24,18 +33,46 @@ class Seeker:
 
 
 class Coin:
-    def __init__(self, position: Position, value: int):
+    def __init__(self, position: Position):
         self.position = position
-        self.value = value
 
 
-class ActionType(Enum):
-    MOVE = 0
-    TAKE_COIN = 1
-    CRASH_WALL = 2
+def take_coin_condition(coins, seeker):
+    for coin in coins:
+        if coin.position.__eq__(seeker.position):
+            return True
+    return False
 
 
-def get_action(maze, coins, seeker: Seeker, opponent_seeker: Seeker):
+def go_to_coin_condition(coins, seeker):
+    for coin in coins:
+        if coin.position.__eq__(seeker.position):
+            return False
+    return True
+
+
+def get_action(maze, coins, seeker, opponent_seeker):
+    if take_coin_condition(coins, seeker):
+        return "Take_coin"
+    if go_to_coin_condition(coins, seeker):
+        return "Go_to_coin"
+    return "Go_to_base"
+
+
+number_of_queries = int(input())
+for i in range(number_of_queries):
+    number_of_coins = int(input())
+    coins = []
+    for j in range(number_of_coins):
+        x, y = [int(x) for x in input().split()]
+        coins.append(Coin(Position(x, y)))
+    x, y = [int(x) for x in input().split()]
+    has_coin = bool(int(input()))
+    seeker = Seeker(Position(x, y), has_coin)
+    print(get_action(None, coins, seeker, None))
+
+
+def get_action1(maze, coins, seeker: Seeker, opponent_seeker: Seeker):
     action = Action()
     action.type = ActionType.MOVE
     target_coin = coins[0]
@@ -58,5 +95,3 @@ def get_action(maze, coins, seeker: Seeker, opponent_seeker: Seeker):
         action.type = ActionType.CRASH_WALL
     return action
 
-
-print(Ceil.WALL.value)
