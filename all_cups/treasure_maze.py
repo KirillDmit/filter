@@ -1,4 +1,6 @@
 from enum import Enum
+from numpy import copy
+from typing import List, Set
 
 
 class Ceil(Enum):
@@ -40,7 +42,8 @@ class Coin:
 def take_coin_condition(coins, seeker):
     for coin in coins:
         if coin.position.__eq__(seeker.position):
-            return True
+            if not seeker.has_coin:
+                return True
     return False
 
 
@@ -94,4 +97,24 @@ def get_action1(maze, coins, seeker: Seeker, opponent_seeker: Seeker):
     if maze[action.position.x][action.position.y] == Ceil.WALL:
         action.type = ActionType.CRASH_WALL
     return action
+
+
+def bfs(maze):
+    queue = []
+    marked = set()
+    shifts = [Position(0, 1), Position(0, -1), Position(1, 0), Position(-1, 0)]
+
+    start_vertex = Position(0, 0)
+    queue.append(start_vertex)
+    marked.add(start_vertex)
+    while len(queue) != 0:
+        current_vertex = queue.pop(0)
+        for shift in shifts:
+            next_vertex = copy(current_vertex)
+            next_vertex.x += shift.x
+            next_vertex.y += shift.y
+            in_maze = 0 <= next_vertex.x < 20 and 0 <= next_vertex.y < 20
+            if in_maze and maze[next_vertex.x][next_vertex.y] == Ceil.EMPTY and next_vertex not in marked:
+                marked.add(next_vertex)
+                queue.append(next_vertex)
 
