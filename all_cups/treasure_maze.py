@@ -62,17 +62,18 @@ def get_action(maze, coins, seeker, opponent_seeker):
     return "Go_to_base"
 
 
-number_of_queries = int(input())
-for i in range(number_of_queries):
-    number_of_coins = int(input())
-    coins = []
-    for j in range(number_of_coins):
+def test():
+    number_of_queries = int(input())
+    for i in range(number_of_queries):
+        number_of_coins = int(input())
+        coins = []
+        for j in range(number_of_coins):
+            x, y = [int(x) for x in input().split()]
+            coins.append(Coin(Position(x, y)))
         x, y = [int(x) for x in input().split()]
-        coins.append(Coin(Position(x, y)))
-    x, y = [int(x) for x in input().split()]
-    has_coin = bool(int(input()))
-    seeker = Seeker(Position(x, y), has_coin)
-    print(get_action(None, coins, seeker, None))
+        has_coin = bool(int(input()))
+        seeker = Seeker(Position(x, y), has_coin)
+        print(get_action(None, coins, seeker, None))
 
 
 def get_action1(maze, coins, seeker: Seeker, opponent_seeker: Seeker):
@@ -101,20 +102,30 @@ def get_action1(maze, coins, seeker: Seeker, opponent_seeker: Seeker):
 
 def bfs(maze):
     queue = []
-    marked = set()
+    parent = {}
+    visited = set()
     shifts = [Position(0, 1), Position(0, -1), Position(1, 0), Position(-1, 0)]
 
     start_vertex = Position(0, 0)
-    queue.append(start_vertex)
-    marked.add(start_vertex)
+    queue.append((start_vertex, 0))
+    visited.add(start_vertex)
+    parent[start_vertex] = start_vertex
     while len(queue) != 0:
-        current_vertex = queue.pop(0)
+        current_vertex, layer_number = queue.pop(0)
         for shift in shifts:
             next_vertex = copy(current_vertex)
             next_vertex.x += shift.x
             next_vertex.y += shift.y
             in_maze = 0 <= next_vertex.x < 20 and 0 <= next_vertex.y < 20
-            if in_maze and maze[next_vertex.x][next_vertex.y] == Ceil.EMPTY and next_vertex not in marked:
-                marked.add(next_vertex)
-                queue.append(next_vertex)
+            if in_maze and maze[next_vertex.x][next_vertex.y] == Ceil.EMPTY and next_vertex not in visited:
+                visited.add(next_vertex)
+                parent[next_vertex] = current_vertex
+                queue.append((next_vertex, layer_number + 1))
+    result = []
+    current_vertex = Position(0, 4)
+    while current_vertex != start_vertex:
+        result.append(current_vertex)
+        current_vertex = parent[current_vertex]
+    result = reversed(result)
 
+    return result
